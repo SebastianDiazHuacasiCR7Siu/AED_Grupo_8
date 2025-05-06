@@ -1,38 +1,48 @@
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
     public static void main(String[] args) {
-        // Lista de enteros para List<T>
-        List<Integer> numeros = Arrays.asList(1, 3, 5, 7, 9);
+        GestorDeTareas<Tarea> gestor = new GestorDeTareas<>();
 
-        System.out.println("¿Contiene 7? " + UtilidadesLista.buscarElemento(numeros, 7));
-        System.out.println("Lista invertida: " + UtilidadesLista.invertirLista(numeros));
+        //se añaden 3 tareas con diferentes prioridades cada una
+        gestor.agregarTarea(new Tarea("Terminar informe", 5));
+        gestor.agregarTarea(new Tarea("Preparar presentación", 7));
+        gestor.agregarTarea(new Tarea("Revisar emails", 3));
 
-        // Creacion de lista enlazada: 
-        Node<Integer> lista1 = null;
-        lista1 = ListaEnlazadaOperaciones.insertarAlFinal(lista1, 1);
-        lista1 = ListaEnlazadaOperaciones.insertarAlFinal(lista1, 2);
-        lista1 = ListaEnlazadaOperaciones.insertarAlFinal(lista1, 3);
+        //se muestran las tareas que actualmente estan en la lista
+        System.out.println("Tareas actuales:"); 
+        gestor.imprimirTareas();
 
-        System.out.println("Nodos en primera lista : " + ListaEnlazadaOperaciones.contarNodos(lista1));
+        //se elimina la tarea "Revisar emails" de la lista
+        gestor.eliminarTarea(new Tarea("Revisar emails", 3));
+        System.out.println("\nDespués de eliminar una tarea:");
+        gestor.imprimirTareas();
 
-        // Creacion de segunda lista con mismos valores
-        Node<Integer> lista2 = new Node<>(1);
-        lista2.siguiente = new Node<>(2);
-        lista2.siguiente.siguiente = new Node<>(3);
+        //se comprueba si la tarea "Preparar presentacion" esta en la lista
+        System.out.println("\n¿Existe la tarea 'Preparar presentación'?: " + gestor.contieneTarea(new Tarea("Preparar presentación", 7)));
 
-        System.out.println("¿lista1 y lista2 son iguales? " + ListaEnlazadaOperaciones.sonIguales(lista1, lista2));
+        //invierte la lista de tareas
+        gestor.invertirTareas();
+        System.out.println("\nLista invertida:");
+        gestor.imprimirTareas();
 
-        // Concatenar primera lista con otra lista
-        Node<Integer> otra = new Node<>(4);
-        otra.siguiente = new Node<>(5);
-        Node<Integer> listaConcatenada = ListaEnlazadaOperaciones.concatenarListas(lista1, otra);
+        // Se transfiere la tarea "Terminar informe" a la lista de tareas completadas.
+        List<Tarea> tareasCompletadas = new ArrayList<>();
+        tareasCompletadas.addAll(gestor.transferirTarea(new Tarea("Terminar informe", 5)));
 
-        System.out.print("Lista concatenada: ");
-        while (listaConcatenada != null) {
-            System.out.print(listaConcatenada.valor + " ");
-            listaConcatenada = listaConcatenada.siguiente;
+         // 8. Mostrar tareas completadas
+        System.out.println("\nTareas Completadas:");
+        for (Tarea t : tareasCompletadas) {
+            System.out.println(t);
         }
+
+        // se muestran las tareas restantes
+        System.out.println("\nTareas restantes:");
+        gestor.imprimirTareas();
+
+        //se muestra la tarea con la mayor prioridad de las que quedanq
+        System.out.println("\nTarea de mayor prioridad:");
+        System.out.println(gestor.obtenerTareaMasPrioritaria());
     }
 }

@@ -1,9 +1,27 @@
+//Nodo generico de lista enlazada
 public class Node<T> {
-    public T valor;
-    public Node<T> siguiente;
+    private T data;   //dato que guarda el nodo de Tipo T
+    private Node<T> next; //se apunta al siguiente nodo
 
-    public Node(T valor) {
-        this.valor = valor;
-        this.siguiente = null;
+    //constructor del nodo, recibe el dato que va a almacenar
+    public Node(T data) {
+        this.data = data;
+        this.next = null; //por defecto el siguiente es null
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public Node<T> getNext() {
+        return next;
+    }
+
+    public void setNext(Node<T> next) {
+        this.next = next;
     }
 }
