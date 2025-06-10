@@ -3,75 +3,66 @@ package graph;
 import java.util.ArrayList;
 import java.util.Stack;
 
-
 public class Main {
     public static void main(String[] args) {
-        GraphLink<Integer> graph = new GraphLink<>();
+        GraphLink<String> graph = new GraphLink<>();
 
         // Insertar vértices
-        graph.insertVertex(1);
-        graph.insertVertex(2);
-        graph.insertVertex(3);
-        graph.insertVertex(4);
-        graph.insertVertex(5);
+        graph.insertVertex("A");
+        graph.insertVertex("B");
+        graph.insertVertex("C");
+        graph.insertVertex("D");
+        graph.insertVertex("E");
 
-        // Insertar aristas
-        graph.insertEdge(1, 2);
-        graph.insertEdge(1, 3);
-        graph.insertEdge(2, 4);
-        graph.insertEdge(3, 4);
-        graph.insertEdge(4, 5);
+        // Insertar aristas con pesos
+        graph.insertEdgeWeight("A", "B", 2);
+        graph.insertEdgeWeight("A", "C", 4);
+        graph.insertEdgeWeight("B", "D", 3);
+        graph.insertEdgeWeight("C", "D", 1);
+        graph.insertEdgeWeight("D", "E", 5);
 
-        // Mostrar grafo
-        System.out.println("Grafo:");
-        System.out.println(graph);
+        System.out.println("Grafo: " + graph);
 
-        // Buscar arista
-        System.out.println("¿Existe arista entre 1 y 2? " + graph.searchEdge(1, 2));
-        System.out.println("¿Existe arista entre 2 y 5? " + graph.searchEdge(2, 5));
+        // Recorrido DFS
+        System.out.print("DFS desde A: ");
+        graph.dfs("A");
+        System.out.println();
 
-        // Recorrido en profundidad 
-        System.out.println("Recorrido en profundidad desde vértice 1:");
-        graph.dfs(1);
+        // Recorrido BFS
+        System.out.print("BFS desde A: ");
+        graph.bfs("A");
+        System.out.println();
 
-        // Recorrido en anchura desde vértice 1
-        System.out.println("\n\nRecorrido en anchura desde vértice 1:");
-        graph.bfs(1);
-
-        // Camino desde 1 hasta 5 usando BFS
-        System.out.println("\n\nCamino más corto desde 1 hasta 5 (bfsPath):");
-        ArrayList<Integer> path = graph.bfsPath(1, 5);
+        // Ruta más corta de A a E (Dijkstra)
+        Stack<String> path = graph.Dijkstra("A", "E");
         if (path != null) {
-            System.out.println("Camino encontrado: " + path);
+            System.out.println("Ruta más corta de A a E (Dijkstra): " + path);
         } else {
-            System.out.println("No existe camino entre 1 y 5.");
+            System.out.println("No hay ruta de A a E.");
         }
-        
-        // Camino más corto usando Dijkstra
-        System.out.println("\nCamino más corto desde 1 hasta 5 (Dijkstra):");
-        Stack<Integer> stackPath = graph.Dijkstra(1, 5);
-        if (stackPath != null && !stackPath.isEmpty()) {
-        while (!stackPath.isEmpty()) {
-        System.out.print(stackPath.pop());
-        if (!stackPath.isEmpty()) System.out.print(" -> ");
-        }
-            System.out.println();
+
+        // Verificar si es conexo
+        System.out.println("¿Es conexo? " + graph.isConexo());
+
+        // Verificar tipo de grafo
+        System.out.println("¿Es ciclo? " + graph.esCiclo());
+        System.out.println("¿Es camino? " + graph.esCamino());
+        System.out.println("¿Es rueda? " + graph.esRueda());
+        System.out.println("¿Es completo? " + graph.esCompleto());
+
+        // Buscar ruta por BFS
+        ArrayList<String> bfsPath = graph.bfsPath("A", "E");
+        if (bfsPath != null) {
+            System.out.println("Camino de A a E (BFS): " + bfsPath);
         } else {
-        System.out.println("No existe ruta entre los vértices.");
-}
+            System.out.println("No se encontró camino de A a E con BFS.");
+        }
 
-
-        // Eliminar arista
-        graph.removeEdge(1, 2);
-        System.out.println("\nDespués de eliminar la arista (1 -> 2):");
-        System.out.println(graph);
-
-        // Eliminar vértice
-        graph.removeVertex(4);
-        System.out.println("Después de eliminar el vértice 4:");
-        System.out.println(graph);
+        // Obtener grado de un nodo
+        System.out.println("Grado del nodo D: " + graph.gradoNodo("D"));
     }
 }
+
 
 
 
