@@ -108,7 +108,7 @@ public class GraphLink<E> {
         }
     }
 
-    // 01.a) bfs(v): realiza el recorrido en anchura a partir del vértice v 
+    // bfs(v): realiza el recorrido en anchura a partir del vértice v 
 
     public void bfs(E startData) {
         Vertex<E> startVertex = searchVertex(startData);
@@ -137,7 +137,7 @@ public class GraphLink<E> {
         }
     }
 
-    // 01.b) bfsPath(v, z): que es la especialización del método bfs()
+    // bfsPath(v, z): que es la especialización del método bfs
 
     public ArrayList<E> bfsPath(E startData, E endData) {
         Vertex<E> startVertex = searchVertex(startData);
@@ -267,5 +267,113 @@ public class GraphLink<E> {
     }
     return stack;
     }
+
+        // a) Obtener el grado de un nodo
+    public int gradoNodo(E data) {
+    Vertex<E> vertex = searchVertex(data);
+    if (vertex == null) return -1;
+    return vertex.listAdj.size();
+}
+
+    // b) Verifica si el grafo es un camino (Px)
+    public boolean esCamino() {
+    int countGrado1 = 0;
+    int countGrado2 = 0;
+
+    for (Vertex<E> vertex : listVertex) {
+        int grado = vertex.listAdj.size();
+        if (grado == 1) {
+            countGrado1++;
+        } else if (grado == 2) {
+            countGrado2++;
+        } else {
+            return false;
+        }
+    }
+
+    return countGrado1 == 2 && (countGrado1 + countGrado2) == listVertex.size();
+}
+
+    // c) Verifica si el grafo es un ciclo (Cx)
+    public boolean esCiclo() {
+    for (Vertex<E> vertex : listVertex) {
+        if (vertex.listAdj.size() != 2) return false;
+    }
+    return isConexo();
+}
+
+    // d) Verifica si el grafo es una rueda (Wx)
+    public boolean esRueda() {
+    int n = listVertex.size();
+    int centro = -1;
+    int cicloCount = 0;
+
+    for (Vertex<E> vertex : listVertex) {
+        int grado = vertex.listAdj.size();
+        if (grado == n - 1) {
+            if (centro != -1) return false; // solo debe haber un vértice con grado n-1
+            centro = 1;
+        } else if (grado == 3 || grado == 2) {
+            cicloCount++;
+        } else {
+            return false;
+        }
+    }
+
+    return centro == 1 && cicloCount == n - 1;
+}
+
+    // e) Verifica si el grafo es completo (Kx)
+    public boolean esCompleto() {
+    int n = listVertex.size();
+    for (Vertex<E> vertex : listVertex) {
+        if (vertex.listAdj.size() != n - 1) {
+            return false;
+        }
+    }
+    return true;
+}
+// Método para verificar si dos grafos son isomorfos 
+public boolean isIsomorfo(GraphLink<E> other) {
+    if (this.listVertex.size() != other.listVertex.size()) return false;
+    ArrayList<Integer> deg1 = new ArrayList<>(), deg2 = new ArrayList<>();
+    for (Vertex<E> v : this.listVertex) deg1.add(v.listAdj.size());
+    for (Vertex<E> v : other.listVertex) deg2.add(v.listAdj.size());
+    deg1.sort(Integer::compareTo); deg2.sort(Integer::compareTo);
+    return deg1.equals(deg2);
+}
+
+// Método para verificar si el grafo es plano 
+public boolean isPlano() {
+    int V = listVertex.size(), A = 0;
+    for (Vertex<E> v : listVertex) A += v.listAdj.size();
+    return A <= (3 * V - 6);
+}
+
+// Método para verificar si el grafo es fuertemente conexo
+public boolean isFuertementeConexo() {
+    for (Vertex<E> v : listVertex) {
+        ListLinked<Vertex<E>> visited = new ListLinked<>();
+        dfsVisit(v, visited);
+        if (visited.size() != listVertex.size()) return false;
+    }
+    return true;
+}
+
+// Método para verificar si el grafo es auto-complementario
+public boolean isAutoComplementario() {
+    GraphLink<E> comp = new GraphLink<>();
+    for (Vertex<E> v : listVertex) comp.insertVertex(v.getData());
+    for (Vertex<E> v : listVertex) {
+        for (Vertex<E> w : listVertex) {
+            if (!v.equals(w) && !searchEdge(v.getData(), w.getData())) {
+                comp.insertEdge(v.getData(), w.getData());
+            }
+        }
+    }
+    return this.isIsomorfo(comp);
+}
+
+
 }
 
